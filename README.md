@@ -31,7 +31,6 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture including bidir
 
 5. **Deploy** (for each domain):
    ```bash
-   npm run build
    npx cdk deploy \
      -c domainName=yourdomain.com \
      -c smtpHost=smtp.yourserver.com \
@@ -80,9 +79,9 @@ npx cdk deploy -c domainName=domain2.com -c smtpHost=smtp2.example.com -c smtpPo
 
 ## Commands
 
-* `npm run build`   - compile typescript to js
+* `npm run build`   - compile CDK typescript to js
 * `npm run watch`   - watch for changes and compile
 * `npm run test`    - perform the jest unit tests
-* `npx cdk deploy`  - deploy this stack to your default AWS account/region
+* `npx cdk deploy`  - deploy this stack (Lambda code bundled automatically)
 * `npx cdk diff`    - compare deployed stack with current state
 * `npx cdk synth`   - emits the synthesized CloudFormation template

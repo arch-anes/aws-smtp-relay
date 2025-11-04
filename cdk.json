@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/aws-smtp-relay.ts",
+  "app": "npm install && npm run build && npx ts-node --prefer-ts-exts bin/aws-smtp-relay.ts",
   "watch": {
     "include": [
       "**"
