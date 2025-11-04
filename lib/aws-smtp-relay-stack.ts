@@ -81,6 +81,7 @@ export class AwsSmtpRelayStack extends cdk.Stack {
     ruleSet.addRule('ForwardRule', {
       enabled: true,
       recipients: props.recipients || [props.domainName],
+      scanEnabled: true,
       actions: [
         new actions.S3({
           bucket: emailBucket,
