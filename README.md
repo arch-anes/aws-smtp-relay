@@ -8,6 +8,8 @@ This CDK project receives emails via AWS SES and forwards them to another SMTP s
 - **Lambda Function**: Processes and forwards emails to SMTP server
 - **SES Receipt Rule**: Triggers the workflow when emails arrive
 
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture including bidirectional setup (inbound + outbound relay).
+
 
 ## Setup
 
