@@ -8,6 +8,8 @@ export const handler = async (event: SQSEvent) => {
   const bucket = process.env.BUCKET_NAME!;
   const host = process.env.SMTP_HOST!;
   const port = parseInt(process.env.SMTP_PORT!);
+  const user = process.env.SMTP_USER;
+  const password = process.env.SMTP_PASSWORD;
   
   const body = JSON.parse(event.Records[0].body);
   const sesMessage = JSON.parse(body.Message);
@@ -22,6 +24,10 @@ export const handler = async (event: SQSEvent) => {
     port: port,
     secure: port === 465 || port === 2465,
     requireTLS: port !== 25 && port !== 465 && port !== 2465,
+    auth: user && password ? {
+      user: user,
+      pass: password
+    } : undefined,
     tls: { rejectUnauthorized: false }
   });
   

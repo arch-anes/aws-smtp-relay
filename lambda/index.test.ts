@@ -85,4 +85,43 @@ describe('Email Forwarder Lambda', () => {
       expect.objectContaining({ secure: true, port: 465 })
     );
   });
+
+  it('should use authentication if SMTP_USER and SMTP_PASSWORD are provided', async () => {
+    process.env.SMTP_USER = 'test-user';
+    process.env.SMTP_PASSWORD = 'test-password';
+    
+    const event: SQSEvent = {
+      Records: [{
+        body: JSON.stringify({
+          Message: JSON.stringify({
+            mail: {
+              messageId: 'test-id',
+              source: 'from@test.com',
+              destination: ['to@test.com']
+            }
+          })
+        })
+      }]
+    } as any;
+
+    mockS3Send.mockResolvedValue({
+      Body: { transformToString: async () => 'email' }
+    });
+    mockSendMail.mockResolvedValue({});
+
+    await handler(event);
+
+    expect(nodemailer.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        auth: {
+          user: 'test-user',
+          pass: 'test-password'
+        }
+      })
+    );
+
+    // Cleanup
+    delete process.env.SMTP_USER;
+    delete process.env.SMTP_PASSWORD;
+  });
 });

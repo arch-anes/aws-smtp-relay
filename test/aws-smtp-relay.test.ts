@@ -43,4 +43,24 @@ describe('AwsSmtpRelayStack', () => {
       }
     });
   });
+
+  it('should pass smtpUser and smtpPassword to Lambda environment', () => {
+    const app = new cdk.App();
+    const stack = new AwsSmtpRelayStack(app, 'AuthTestStack', {
+      domainName: 'test.com',
+      smtpHost: 'smtp.test.com',
+      smtpPort: '25',
+      smtpUser: 'myuser',
+      smtpPassword: 'mypassword'
+    });
+    const authTemplate = Template.fromStack(stack);
+    authTemplate.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: {
+        Variables: Match.objectLike({
+          SMTP_USER: 'myuser',
+          SMTP_PASSWORD: 'mypassword'
+        })
+      }
+    });
+  });
 });

@@ -11,6 +11,8 @@ export interface AwsSmtpRelayStackProps extends cdk.StackProps {
   domainName: string;
   smtpHost: string;
   smtpPort: string;
+  smtpUser?: string;
+  smtpPassword?: string;
   recipients?: string[];
   retryDelaySeconds?: number;
   maxRetries?: number;
@@ -41,7 +43,9 @@ export class AwsSmtpRelayStack extends cdk.Stack {
       environment: {
         BUCKET_NAME: emailBucket.bucketName,
         SMTP_HOST: props.smtpHost,
-        SMTP_PORT: props.smtpPort
+        SMTP_PORT: props.smtpPort,
+        SMTP_USER: props.smtpUser || '',
+        SMTP_PASSWORD: props.smtpPassword || ''
       }
     });
 

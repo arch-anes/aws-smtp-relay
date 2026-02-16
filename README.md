@@ -41,6 +41,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture including bidir
    - `domainName` (required): Domain name for this relay
    - `smtpHost` (required): Target SMTP server hostname
    - `smtpPort` (required): SMTP port (25 for plain, 465/2465 for implicit TLS)
+   - `smtpUser` (optional): SMTP authentication username
+   - `smtpPassword` (optional): SMTP authentication password
    - `recipients` (optional): Comma-separated list of recipients to filter (e.g., "@yourdomain.com,user@example.com")
    - `retryDelaySeconds` (optional): Seconds before retry on failure (default: 90)
    - `maxRetries` (optional): Maximum retry attempts before moving to DLQ (default: 3)
@@ -51,6 +53,8 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture including bidir
      -c domainName=yourdomain.com \
      -c smtpHost=smtp.yourserver.com \
      -c smtpPort=25 \
+     -c smtpUser=myuser \
+     -c smtpPassword=mypassword \
      -c recipients="@yourdomain.com" \
      -c retryDelaySeconds=120 \
      -c maxRetries=5
