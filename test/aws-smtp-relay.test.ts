@@ -1,5 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
-import { Template } from 'aws-cdk-lib/assertions';
+import { Template, Match } from 'aws-cdk-lib/assertions';
 import { AwsSmtpRelayStack } from '../lib/aws-smtp-relay-stack';
 
 describe('AwsSmtpRelayStack', () => {
@@ -21,23 +21,23 @@ describe('AwsSmtpRelayStack', () => {
 
   it('should create Lambda function', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
-      Runtime: 'nodejs20.x',
+      Runtime: 'nodejs22.x',
       Timeout: 30
     });
   });
 
   it('should create SES receipt rule set', () => {
     template.hasResourceProperties('AWS::SES::ReceiptRuleSet', {
-      RuleSetName: 'email-forwarding-test-com'
+      RuleSetName: 'email-forwarding-rules'
     });
   });
 
   it('should grant Lambda read access to S3', () => {
     template.hasResourceProperties('AWS::IAM::Policy', {
       PolicyDocument: {
-        Statement: expect.arrayContaining([
-          expect.objectContaining({
-            Action: expect.arrayContaining(['s3:GetObject*', 's3:GetBucket*', 's3:List*'])
+        Statement: Match.arrayWith([
+          Match.objectLike({
+            Action: Match.arrayWith(['s3:GetObject*', 's3:GetBucket*', 's3:List*'])
           })
         ])
       }

@@ -1,18 +1,25 @@
-import { handler } from './index';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
-import { SQSEvent } from 'aws-lambda';
 import * as nodemailer from 'nodemailer';
-
-jest.mock('@aws-sdk/client-s3');
-jest.mock('nodemailer');
 
 const mockS3Send = jest.fn();
 const mockSendMail = jest.fn();
 
+jest.mock('@aws-sdk/client-s3', () => {
+  return {
+    S3Client: jest.fn().mockImplementation(() => ({
+      send: (...args: any[]) => mockS3Send(...args)
+    })),
+    GetObjectCommand: jest.fn()
+  };
+});
+jest.mock('nodemailer');
+
+import { handler } from './index';
+import { SQSEvent } from 'aws-lambda';
+
 describe('Email Forwarder Lambda', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    (S3Client as jest.Mock).mockImplementation(() => ({ send: mockS3Send }));
     (nodemailer.createTransport as jest.Mock).mockReturnValue({ sendMail: mockSendMail });
     
     process.env.BUCKET_NAME = 'test-bucket';
@@ -24,11 +31,13 @@ describe('Email Forwarder Lambda', () => {
     const event: SQSEvent = {
       Records: [{
         body: JSON.stringify({
-          mail: {
-            messageId: 'test-message-id',
-            source: 'sender@example.com',
-            destination: ['recipient@example.com']
-          }
+          Message: JSON.stringify({
+            mail: {
+              messageId: 'test-message-id',
+              source: 'sender@example.com',
+              destination: ['recipient@example.com']
+            }
+          })
         })
       }]
     } as any;
@@ -54,11 +63,13 @@ describe('Email Forwarder Lambda', () => {
     const event: SQSEvent = {
       Records: [{
         body: JSON.stringify({
-          mail: {
-            messageId: 'test-id',
-            source: 'from@test.com',
-            destination: ['to@test.com']
-          }
+          Message: JSON.stringify({
+            mail: {
+              messageId: 'test-id',
+              source: 'from@test.com',
+              destination: ['to@test.com']
+            }
+          })
         })
       }]
     } as any;
