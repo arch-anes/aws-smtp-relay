@@ -5,6 +5,7 @@ import * as nodemailer from 'nodemailer';
 const s3 = new S3Client({});
 
 export const handler = async (event: SQSEvent) => {
+  const domainName = process.env.DOMAIN_NAME!;
   const bucket = process.env.BUCKET_NAME!;
   const host = process.env.SMTP_HOST!;
   const port = parseInt(process.env.SMTP_PORT!);
@@ -22,6 +23,7 @@ export const handler = async (event: SQSEvent) => {
   const transporter = nodemailer.createTransport({
     host: host,
     port: port,
+    name: `aws-relay.${domainName}`,
     secure: port === 465 || port === 2465,
     requireTLS: port !== 25 && port !== 465 && port !== 2465,
     auth: user && password ? {

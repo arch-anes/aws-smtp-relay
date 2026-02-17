@@ -41,6 +41,7 @@ export class AwsSmtpRelayStack extends cdk.Stack {
       code: lambda.Code.fromAsset('lambda/dist'),
       timeout: cdk.Duration.seconds(30),
       environment: {
+        DOMAIN_NAME: props.domainName,
         BUCKET_NAME: emailBucket.bucketName,
         SMTP_HOST: props.smtpHost,
         SMTP_PORT: props.smtpPort,

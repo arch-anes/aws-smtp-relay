@@ -23,11 +23,26 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed architecture including bidir
    aws ses verify-domain-identity --domain yourdomain.com
    ```
 
-4. **Configure MX records**:
-   Add MX record pointing to SES inbound endpoint for your region:
-   ```
-   10 inbound-smtp.<region>.amazonaws.com
-   ```
+4. **Configure DNS records**:
+   
+   a. **MX record**
+
+      Add MX record pointing to SES inbound endpoint for your region:
+      ```
+      10 inbound-smtp.<region>.amazonaws.com
+      ```
+   b. **SPF record**
+      
+      Add TXT ``aws-ses` record with a value of:
+      ```
+      v=spf1 ~all
+      ```
+   b. **A record**
+      
+      Add A ``aws-ses` record indicating the subdomain `aws-ses` exists with a dummy value of:
+      ```
+      127.0.0.1
+      ```
 
 5. **Deploy** (for each domain):
    ```bash
